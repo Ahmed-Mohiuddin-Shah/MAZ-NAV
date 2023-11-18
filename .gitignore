@@ -6,6 +6,7 @@
 /MAZ-NAV-ROVER/.vscode/c_cpp_properties.json
 /MAZ-NAV-ROVER/.vscode/launch.json
 /MAZ-NAV-ROVER/.vscode/ipch
+/MAZ-NAV-ROVER/.vscode/settings.json
 
 
 ##########################
@@ -54,3 +55,8 @@
 /maz_nav/android/app/debug
 /maz_nav/android/app/profile
 /maz_nav/android/app/release
+
+##########
+#  Misc. #
+##########
+/BOM/.vscode
