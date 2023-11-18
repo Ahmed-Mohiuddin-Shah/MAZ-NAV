@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "MAZ-NAV-ROVER"
+		},
+		{
+			"path": "MAZ-NAV-APP"
+		},
+		{
+			"path": "3D-MODEL"
+		},
+		{
+			"path": "CIRCUIT-DIAGRAM"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {}
+}
