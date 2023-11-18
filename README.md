@@ -15,7 +15,7 @@ The project integrates OpenCV-based image processing to interpret maze layouts a
 - **3D-MODELS**: Contains 3D models for the robot components.
 - **CIRCUIT-DIAGRAM**: Includes circuit diagrams for electronics.
 - **BOM**: Includes the Bill Of Materials in an Excel sheet
-- **MAZ-NAV-APP/maz_nav**: Flutter-based OpenCV app for maze detection and solving.
+- **maz_nav**: Flutter-based OpenCV app for maze detection and solving.
 - **MAZ-NAV-ROVER**: ESP32-based rover PlatformIO project.
 - **MAZ-NAV-WORKSPACE.code-workspace**: Visual Studio Code workspace configuration.
 
