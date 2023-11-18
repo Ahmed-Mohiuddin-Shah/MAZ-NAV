@@ -1,19 +1,19 @@
 {
 	"folders": [
 		{
-			"path": "MAZ-NAV-ROVER"
+			"path": "maz-nav-rover"
 		},
 		{
-			"path": "MAZ-NAV-APP"
+			"path": "maz_nav"
 		},
 		{
-			"path": "CIRCUIT-DIAGRAM"
+			"path": "circuit-diagram"
 		},
 		{
-			"path": "3D-MODELS"
+			"path": "3D-models"
 		},
 		{
-			"path": "BOM"
+			"path": "bom"
 		},
 		{
 			"path": "."
