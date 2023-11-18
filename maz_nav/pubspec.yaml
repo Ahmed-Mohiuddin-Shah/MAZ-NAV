@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_blue_plus: ^1.29.3
+  google_fonts: ^6.1.0
+  permission_handler: ^11.0.1
 
 dev_dependencies:
   flutter_test:
