@@ -9,9 +9,11 @@
 		{
 			"path": "CIRCUIT-DIAGRAM"
 		},
-		
 		{
 			"path": "3D-MODELS"
+		},
+		{
+			"path": "BOM"
 		},
 		{
 			"path": "."
