@@ -1,8 +1,11 @@
 // Include all of Includes for project
 #include <Includes.h>
 
+// Misc.
+#include <string>
+
 // Headers files
-#include "Definitions.h"
+#include <Definitions.h>
 
 // Sensor Global Variables
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
@@ -16,6 +19,8 @@ MultiStepper steppers;
 // BLE ESP32 Global Variables
 BLEServer *pServer = NULL;
 BLECharacteristic *pCharacteristic = NULL;
+
+long positions[2]; // Array of desired stepper positions
 
 // Custom Server Call Backs
 class MyServerCallbacks : public BLEServerCallbacks
@@ -38,35 +43,11 @@ class MyCharacteristicCallbacks : public BLECharacteristicCallbacks
   {
     std::string value = pCharacteristic->getValue();
 
-    if (value.length() > 0)
-    {
-      String inputData, username, password;
-      for (int i = 0; i < value.length(); i++)
-      {
-
-        inputData = inputData + value[i];
-      }
-      int spaceIndex = inputData.indexOf(' '); // Find the index of the space character
-      if (spaceIndex != -1)
-      {                                                 // If space character is found
-        username = inputData.substring(0, spaceIndex);  // Extract the first word
-        password = inputData.substring(spaceIndex + 1); // Extract the second word
-      }
-      else
-      {
-        Serial.println("No space Found in" + inputData);
-      }
-      Serial.println("Username: " + username);
-      Serial.println("Password: " + password);
-      Serial.println();
-
-      // Handle the received data, e.g., save WiFi credentials, etc.
-    }
   }
 
   void onRead(BLECharacteristic *pCharacteristic)
   {
-    // Implement read operation if needed
+    pCharacteristic->setValue("69");
   }
 };
 
@@ -129,20 +110,5 @@ void setup()
 
 void loop()
 {
-
-  long positions[2]; // Array of desired stepper positions
-
-  positions[0] = 200;
-  positions[1] = 200;
-  steppers.moveTo(positions);
-  steppers.runSpeedToPosition(); // Blocks until all are in position
-  delay(1000);
-
-  // Move to a different coordinate
-  positions[0] = -200;
-  positions[1] = -200;
-  steppers.moveTo(positions);
-  steppers.runSpeedToPosition(); // Blocks until all are in position
-  delay(1000);
 
 }
