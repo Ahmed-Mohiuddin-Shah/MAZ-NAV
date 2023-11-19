@@ -1,33 +1,41 @@
+// Basic Library Include for Arduino Framework
 #include <Arduino.h>
+
+// Library Includes for Sensors and I2C
+// TCS34725 Color Sensor
+// MPU 6050 Gyroscope and Accelerometer
 #include "Adafruit_TCS34725.h"
 #include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
 #include <Wire.h>
+
+// Library Includes for Stepper Drivers
 #include <AccelStepper.h>
 #include <MultiStepper.h>
 
-// Bluetooth Includes for ESP32
+// Bluetooth BLE Library Includes for ESP32
 #include <BLEDevice.h>
 #include <BLEServer.h>
 #include <BLEUtils.h>
 #include <BLE2902.h>
 
+// Headers files
 #include "Definitions.h"
 
-AccelStepper stepper1(AccelStepper::DRIVER, STEP, DIR);
-AccelStepper stepper2(AccelStepper::DRIVER, STEP1, DIR1);
+// Sensor Global Variables
 Adafruit_TCS34725 tcs = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
 Adafruit_MPU6050 mpu;
 
+// Stepper Drivers Global Variables
+AccelStepper stepper1(AccelStepper::DRIVER, STEP, DIR);
+AccelStepper stepper2(AccelStepper::DRIVER, STEP1, DIR1);
 MultiStepper steppers;
 
-// For Bluetooth functionality
-#define SERVICE_UUID "0000180d-0000-1000-8000-00805f9b34fc"
-#define CHARACTERISTIC_UUID "00002a37-0000-1000-8000-00805f9b34fc"
-
+// BLE ESP32 Global Variables
 BLEServer *pServer = NULL;
 BLECharacteristic *pCharacteristic = NULL;
 
+// Custom Server Call Backs
 class MyServerCallbacks : public BLEServerCallbacks
 {
   void onConnect(BLEServer *pServer)
@@ -41,6 +49,7 @@ class MyServerCallbacks : public BLEServerCallbacks
   }
 };
 
+// Custom Characteristic Call Backs
 class MyCharacteristicCallbacks : public BLECharacteristicCallbacks
 {
   void onWrite(BLECharacteristic *pCharacteristic)
@@ -79,6 +88,7 @@ class MyCharacteristicCallbacks : public BLECharacteristicCallbacks
   }
 };
 
+// Setup Code
 void setup()
 {
 
@@ -88,6 +98,7 @@ void setup()
   // Create the BLE Server
   pServer = BLEDevice::createServer();
   pServer->setCallbacks(new MyServerCallbacks());
+
   // Create the BLE Service
   BLEService *pService = pServer->createService(SERVICE_UUID);
 
@@ -100,7 +111,6 @@ void setup()
   // Add a descriptor for the characteristic
   pCharacteristic->addDescriptor(new BLE2902());
 
-
   // Start the service
   pService->start();
 
@@ -110,32 +120,34 @@ void setup()
   pAdvertising->start();
 
   // Configure each stepper
-  stepper1.setMaxSpeed(1000);
-  stepper2.setMaxSpeed(1000);
+  stepper1.setMaxSpeed(200);
+  stepper1.setAcceleration(10);
 
-  stepper1.setAcceleration(50);
-  stepper2.setAcceleration(50);
+  stepper2.setMaxSpeed(200);
+  stepper2.setAcceleration(10);
+  
 
-  // Then give them to MultiStepper to manage
+  // Assign to MultiStepper to manage
   steppers.addStepper(stepper1);
   steppers.addStepper(stepper2);
 
-  pinMode(SERVOPWM, OUTPUT);
-  pinMode(WHITELED, OUTPUT);
-  pinMode(RIGHTSENS, INPUT);
-  pinMode(FRONTSENS, INPUT);
-  pinMode(LEFTSENS, INPUT);
+  // Configuring Inputs and Outputs
+  pinMode(SERVOPWM, OUTPUT);      // Servo pin OUT
+  pinMode(WHITELED, OUTPUT);      // RGB Sensor LED OUT
+  pinMode(RIGHTSENS, INPUT);      // Right Line Sensor Input
+  pinMode(FRONTSENS, INPUT);      // Front Line Sensor Input
+  pinMode(LEFTSENS, INPUT);       // Left Line Sensor Input
 
+  // Setting up the MPU6050
   mpu.begin(0x68);
-
   mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
   mpu.setGyroRange(MPU6050_RANGE_500_DEG);
-
   mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
 }
 
 void loop()
 {
+
   long positions[2]; // Array of desired stepper positions
 
   positions[0] = 200;
@@ -150,4 +162,5 @@ void loop()
   steppers.moveTo(positions);
   steppers.runSpeedToPosition(); // Blocks until all are in position
   delay(1000);
+
 }
