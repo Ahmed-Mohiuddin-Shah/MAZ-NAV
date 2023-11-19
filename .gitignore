@@ -8,54 +8,6 @@
 /MAZ-NAV-ROVER/.vscode/ipch
 /MAZ-NAV-ROVER/.vscode/settings.json
 
-
-##########################
-# Exclusions for Flutter #
-##########################
-# Miscellaneous
-/maz_nav/*.class
-/maz_nav/*.log
-/maz_nav/*.pyc
-/maz_nav/*.swp
-/maz_nav/.DS_Store
-/maz_nav/.atom/
-/maz_nav/.buildlog/
-/maz_nav/.history
-/maz_nav/.svn/
-/maz_nav/migrate_working_dir/
-
-# IntelliJ related
-/maz_nav/*.iml
-/maz_nav/*.ipr
-/maz_nav/*.iws
-/maz_nav/.idea/
-
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-/maz_nav/.vscode/
-
-# Flutter/Dart/Pub related
-/maz_nav/**/doc/api/
-/maz_nav/**/ios/Flutter/.last_build_id
-/maz_nav/.dart_tool/
-/maz_nav/.flutter-plugins
-/maz_nav/.flutter-plugins-dependencies
-/maz_nav/.pub-cache/
-/maz_nav/.pub/
-/maz_nav/build/
-
-# Symbolication related
-/maz_nav/app.*.symbols
-
-# Obfuscation related
-/maz_nav/app.*.map.json
-
-# Android Studio will place build artifacts here
-/maz_nav/android/app/debug
-/maz_nav/android/app/profile
-/maz_nav/android/app/release
-
 ##########
 #  Misc. #
 ##########
