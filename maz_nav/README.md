@@ -1,3 +1,3 @@
 # maz_nav
 
-A new Flutter project.
+Companian App for MAZ-NAV Rover
