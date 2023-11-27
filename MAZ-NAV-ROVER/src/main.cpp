@@ -36,8 +36,10 @@ BluetoothSerial SerialBT;
 // Setup Code
 void setup()
 {
-  Serial.begin(9600);
-  SerialBT.begin("MAZ-NAV"); // Bluetooth device name
+  SerialBT.enableSSP();
+  SerialBT.begin("MAZ-NAV");
+  SerialBT.connect(
+      "VICTUS"); // Bluetooth device name
   // Configure each stepper
   stepper1.setMaxSpeed(MOTOR_MAX_SPEED);
   stepper1.setAcceleration(MOTOR_ACCELERATION);
@@ -63,14 +65,19 @@ void setup()
   mpuGyroModule.setFilterBandwidth(MPU6050_BAND_21_HZ);
 }
 
+String inputFromOtherSide;
+
 void loop()
 {
-  String inputFromOtherSide;
   if (SerialBT.available())
   {
     inputFromOtherSide = SerialBT.readString();
-    SerialBT.println("You had entered: ");
-    SerialBT.println(inputFromOtherSide);
+    positions[0] = inputFromOtherSide.toInt();
+    positions[1] = inputFromOtherSide.toInt();
+    ;
+    steppers.moveTo(positions);
+    steppers.runSpeedToPosition();
+    SerialBT.println("Done");
   }
 
   // positions[0] = 200;
