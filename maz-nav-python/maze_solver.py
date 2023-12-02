@@ -15,16 +15,16 @@ class AnnotatorNotFound(Exception):
 class MazeSolver:
     CELL_SIZE = 20
 
-    def __init__(self, mazeImagePath: str):
+    def __init__(self, mazeImagePath: str | None = None):
         self.mazeImagePath = mazeImagePath
 
-        self.originalImage = cv2.imread(self.mazeImagePath)
-        self.binaryImage = self.readImage()
+        if mazeImagePath:
+            self.originalImage = cv2.imread(self.mazeImagePath)
+            self.binaryImage = self.readImage()
+            self._setDefaults()
+            self._createGraph()
 
         self.annotator = None
-
-        self._setDefaults()
-        self._createGraph()
 
     def solveWithDFS(self, animate: bool = False) -> List[tuple]:
         if animate and not self.annotator:
@@ -53,6 +53,58 @@ class MazeSolver:
 
                 for neighbor in self.graph[vertex]:
                     stack.append((neighbor, path + [neighbor]))
+
+    def solveWithAlgorithm(self, algorithm: str, animate: bool = False) -> List[tuple]:
+        if algorithm == "DFS":
+            return self.solveWithDFS(animate)
+
+        if algorithm == "BFS":
+            return self.solveWithBFS(animate)
+
+        raise Exception("Algorithm not found")
+
+        # if algorithm == "A*":
+        #     return self.solveWithAStar()
+
+        # if algorithm == "Dijkstra":
+        #     return self.solveWithDijkstra()
+
+        # if algorithm == "Greedy":
+        #     return self.solveWithGreedy()
+
+        # if algorithm == "IDA*":
+        #     return self.solveWithIDAStar()
+
+        # if algorithm == "Bidirectional":
+        #     return self.solveWithBidirectional()
+
+    def solveWithBFS(self, animate: bool = False) -> List[tuple]:
+        if animate and not self.annotator:
+            raise AnnotatorNotFound("Please setup annotator first")
+
+        if animate and self.annotator:
+            markedImage = self.annotator.plotPointsOnImage(self.originalImage)
+            markedImage = cv2.cvtColor(markedImage, cv2.COLOR_BGR2RGB)
+
+        queue = deque([(self.start, [self.start])])
+        visited = set()
+
+        while queue:
+            (vertex, path) = queue.popleft()
+            if vertex not in visited:
+                if animate:
+                    prevoius = self.annotator.plotPathOnImage(
+                        markedImage, path[:-1], animate=False)
+                    self.annotator.plotPathOnImage(
+                        prevoius, path[-2:], animate=True)
+
+                if vertex == self.end:
+                    return path
+
+                visited.add(vertex)
+
+                for neighbor in self.graph[vertex]:
+                    queue.append((neighbor, path + [neighbor]))
 
     def _setDefaults(self) -> None:
         height, width = self.binaryImage.shape
@@ -125,3 +177,10 @@ class MazeSolver:
 
     def setAnnotator(self, annotator: MazeAnnotator) -> None:
         self.annotator = annotator
+
+    def setMazeImage(self, mazeImagePath: str) -> None:
+        self.mazeImagePath = mazeImagePath
+        self.originalImage = cv2.imread(self.mazeImagePath)
+        self.binaryImage = self.readImage()
+        self._setDefaults()
+        self._createGraph()
