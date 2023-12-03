@@ -63,9 +63,10 @@ void setup()
   pinMode(LEFTSENS, INPUT);  // Left Line Sensor Input
 }
 
+String inputFromOtherSide;
+
 void loop()
 {
-  String inputFromOtherSide;
   if (SerialBT.available())
   {
     inputFromOtherSide = SerialBT.readString();
