@@ -34,3 +34,17 @@ class Model:
         )
         self.mazeSolver.setAnnotator(annotator)
         self.mazeSolver.solveWithAlgorithm(algorithm, animate=True)
+
+    def runRoverToDestination(self, mazePath: str, algorithm: str) -> None:
+        self.mazeSolver.setMazeImage(mazePath)
+
+        height, width = self.mazeSolver.binaryImage.shape
+        verticalCells = height // self.mazeSolver.CELL_SIZE
+        horizontalCells = width // self.mazeSolver.CELL_SIZE
+        self.mazeSolver.setStart((0, 0))
+        self.mazeSolver.setEnd((horizontalCells - 1, verticalCells - 1))
+
+        path = self.mazeSolver.solveWithAlgorithm(algorithm, animate=False)
+
+        if self.roverController.runRover(path):
+            print("Rover reached destination")

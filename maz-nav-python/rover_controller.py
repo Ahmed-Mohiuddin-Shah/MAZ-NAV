@@ -93,7 +93,8 @@ class RoverController:
 
         return steps
 
-    def sendStepsToRover(self, steps: List[str]) -> bool:
+    def runRover(self, path: List[tuple]) -> bool:
+        steps = self.convertPathToRoverSteps(path)
         self.roverSocket.send(' '.join(steps))
         data = self.roverSocket.recv(1024)
         print("Received: %s" % data)

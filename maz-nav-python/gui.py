@@ -322,6 +322,7 @@ class GUI(Tk):
                 mazeImagePath, algorithm
             )
         else:
+            self.waitForRoverToCompleteThread = None
             self.setupCompletedScreen()
 
     def setupCompletedScreen(self) -> None:
