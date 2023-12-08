@@ -12,6 +12,7 @@
 # Exclusions for CS C++ Project      #
 ######################################
 /MAZ-NAV-APP/.vs
+/MAZ-NAV-APP/x64
 
 ##########
 #  Misc. #
