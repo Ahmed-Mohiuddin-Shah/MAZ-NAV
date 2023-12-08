@@ -5,7 +5,7 @@ Welcome to the MAZ-NAV repository! This project aims to create an intelligent ro
 ## Functionality
 
 The project integrates OpenCV-based image processing to interpret maze layouts and navigate autonomously. Key components include:
-- **OpenCV Flutter App**: Detects maze patterns and facilitates autonomous navigation.
+- **Python and Raylib App**: Detects maze patterns and facilitates autonomous navigation.
 - **ESP32 Code**: Controls the rover's movements based on visual data received from the app.
 - **3D Models**: Physical components for constructing the robot.
 - **Circuit Diagrams**: Guides for assembling the hardware.
@@ -15,7 +15,8 @@ The project integrates OpenCV-based image processing to interpret maze layouts a
 - **3D-MODELS**: Contains 3D models for the robot components.
 - **CIRCUIT-DIAGRAM**: Includes circuit diagrams for electronics.
 - **BOM**: Includes the Bill Of Materials in an Excel sheet
-- **maz_nav**: Flutter-based OpenCV app for maze detection and solving.
+- **maz-nav-python**: Python OpenCV app for maze detection and solving.
+- **MAZ-NAV-APP**: Raylib CPP based OpenCV windows Aplication for maze detection, solving and communicating with Rover
 - **MAZ-NAV-ROVER**: ESP32-based rover PlatformIO project.
 - **MAZ-NAV-WORKSPACE.code-workspace**: Visual Studio Code workspace configuration.
 
