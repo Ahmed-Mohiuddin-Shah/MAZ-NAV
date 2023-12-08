@@ -8,6 +8,11 @@
 /MAZ-NAV-ROVER/.vscode/ipch
 /MAZ-NAV-ROVER/.vscode/settings.json
 
+######################################
+# Exclusions for CS C++ Project      #
+######################################
+/MAZ-NAV-APP/.vs
+
 ##########
 #  Misc. #
 ##########
