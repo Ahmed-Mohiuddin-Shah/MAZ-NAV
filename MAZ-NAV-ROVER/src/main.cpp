@@ -4,9 +4,10 @@
 // Library Includes for Sensors and I2C
 // TCS34725 Color Sensor
 // MPU 6050 Gyroscope and Accelerometer
+#include <SPI.h>
 #include "Adafruit_TCS34725.h"
-#include <Adafruit_MPU6050.h>
 #include <Adafruit_Sensor.h>
+#include <MPU6050_tockn.h>
 #include <Wire.h>
 
 // Library Includes for Stepper Drivers
@@ -17,29 +18,32 @@
 
 // Misc.
 #include <string>
+#include <vector>
+#include <sstream>
 
 // Headers files
 #include <macros.h>
 
 // Sensor Global Variables
 Adafruit_TCS34725 tcsColorSensor = Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_614MS, TCS34725_GAIN_1X);
-Adafruit_MPU6050 mpuGyroModule;
+MPU6050 mpuGyroModule(Wire);
 
 // Stepper Drivers Global Variables
 AccelStepper stepper1(AccelStepper::DRIVER, STEP, MOTOR_DIR_1);
 AccelStepper stepper2(AccelStepper::DRIVER, STEP1, MOTOR_DIR_2);
 MultiStepper steppers;
 
-long positions[2]; // Array of desired stepper positions
+long positions[2] = {3200, 3200}; // Array of desired stepper positions
+
 BluetoothSerial SerialBT;
 
 // Setup Code
 void setup()
 {
-  SerialBT.enableSSP();
-  SerialBT.begin("MAZ-NAV");
-  SerialBT.connect(
-      "VICTUS"); // Bluetooth device name
+  Wire.begin();
+  mpuGyroModule.begin();
+  mpuGyroModule.calcGyroOffsets(true);
+  SerialBT.begin("MAZ-NAV"); // Bluetooth device name
   // Configure each stepper
   stepper1.setMaxSpeed(MOTOR_MAX_SPEED);
   stepper1.setAcceleration(MOTOR_ACCELERATION);
@@ -57,12 +61,6 @@ void setup()
   pinMode(RIGHTSENS, INPUT); // Right Line Sensor Input
   pinMode(FRONTSENS, INPUT); // Front Line Sensor Input
   pinMode(LEFTSENS, INPUT);  // Left Line Sensor Input
-
-  // Setting up the MPU6050
-  mpuGyroModule.begin(0x68);
-  mpuGyroModule.setAccelerometerRange(MPU6050_RANGE_8_G);
-  mpuGyroModule.setGyroRange(MPU6050_RANGE_500_DEG);
-  mpuGyroModule.setFilterBandwidth(MPU6050_BAND_21_HZ);
 }
 
 String inputFromOtherSide;
@@ -72,23 +70,84 @@ void loop()
   if (SerialBT.available())
   {
     inputFromOtherSide = SerialBT.readString();
-    positions[0] = inputFromOtherSide.toInt();
-    positions[1] = inputFromOtherSide.toInt();
-    ;
-    steppers.moveTo(positions);
-    steppers.runSpeedToPosition();
-    SerialBT.println("Done");
+    std::vector<std::string> moves;
+
+    std::string word;
+    std::stringstream stream(inputFromOtherSide.c_str());
+
+    while (stream >> word)
+    {
+      moves.push_back(word);
+    }
+
+    for (auto move : moves)
+    {
+      if (move.compare("init") == 0)
+      {
+        int counter = 0;
+        initOptions option;
+        String s;
+        for (auto move : moves)
+        {
+          if (move.compare("init") == 0)
+          {
+            continue;
+          }
+          if (counter % 2)
+          {
+            s = String(move.c_str());
+            switch (option)
+            {
+            case ACCELERATION:
+              stepper1.setAcceleration(s.toInt());
+              stepper2.setAcceleration(s.toInt());
+              break;
+            case MAX_SPEED:
+              stepper1.setMaxSpeed(s.toInt());
+              stepper2.setMaxSpeed(s.toInt());
+              break;
+            default:
+              break;
+            }
+          }
+          else
+          {
+            if (move == "-accel")
+            {
+              option = ACCELERATION;
+            }
+            else if (move == "-mSpeed")
+            {
+              option = MAX_SPEED;
+            }
+          }
+        }
+      }
+      else if (move.compare("right") == 0)
+      {
+        Serial.println("right");
+        stepper1.setCurrentPosition(MOTOR_STEPS + STEPS_FOR_90);
+        stepper2.setCurrentPosition(MOTOR_STEPS - STEPS_FOR_90);
+        steppers.moveTo(positions);
+        steppers.runSpeedToPosition();
+      }
+      else if (move.compare("left") == 0)
+      {
+        Serial.println("left");
+        stepper1.setCurrentPosition(MOTOR_STEPS - STEPS_FOR_90);
+        stepper2.setCurrentPosition(MOTOR_STEPS + STEPS_FOR_90);
+        steppers.moveTo(positions);
+        steppers.runSpeedToPosition();
+      }
+      else if (move.compare("move") == 0)
+      {
+        stepper1.setCurrentPosition(0);
+        stepper2.setCurrentPosition(0);
+        steppers.moveTo(positions);
+        steppers.runSpeedToPosition();
+      }
+    }
+
+    SerialBT.print("Move Done");
   }
-
-  // positions[0] = 200;
-  // positions[1] = 200;
-  // steppers.moveTo(positions);
-  // steppers.runSpeedToPosition();
-
-  // delay(500);
-
-  // positions[0] = -200;
-  // positions[1] = -200;
-  // steppers.moveTo(positions);
-  // steppers.runSpeedToPosition();
 }

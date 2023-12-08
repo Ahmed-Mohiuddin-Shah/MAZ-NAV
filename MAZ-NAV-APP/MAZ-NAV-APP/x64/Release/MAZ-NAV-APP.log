@@ -1,0 +1,2 @@
+﻿  main.cpp
+LINK : fatal error LNK1104: cannot open file 'C:\Users\mohiu\Documents\Projects\MAZ-NAV\MAZ-NAV-APP\x64\Release\MAZ-NAV-APP.exe'
