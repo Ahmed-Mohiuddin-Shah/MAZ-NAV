@@ -5,7 +5,7 @@ void connectionIssue() {
     while (!restartConnecting && !(layer == EXIT))
     {
 
-        if (CheckCollisionPointRec(GetMousePosition(), Rectangle{ 45, (float)screenHeight - 190, 200, 50 }))
+        if (CheckCollisionPointRec(GetMousePosition(), Rectangle{ 45, (float)screenHeight - 140, 200, 50 }))
         {
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
@@ -15,7 +15,7 @@ void connectionIssue() {
             }
         }
 
-        if (CheckCollisionPointRec(GetMousePosition(), Rectangle{ 45, (float)screenHeight - 140, 170, 50 }))
+        if (CheckCollisionPointRec(GetMousePosition(), Rectangle{ 45, (float)screenHeight - 90, 170, 50 }))
         {
             if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
             {
@@ -28,12 +28,12 @@ void connectionIssue() {
         ClearBackground(TERMINALBROWN);
         DrawTextEx(consolasFont, "CONNECTION ISSUE :(", Vector2{ 45, 30 }, 100, 0.5, TERMINALTEXTGOLD);
 
-        DrawTextEx(consolasFont, TextFormat("Check if your Bluetooth Adapter is ON  %s", mazNavRover.name.c_str()), Vector2{45, (float)screenHeight - 390}, 50, 0.5, TERMINALTEXTGOLD);
+        DrawTextEx(consolasFont, TextFormat("Check if your Bluetooth Adapter is ON"), Vector2{45, (float)screenHeight - 390}, 50, 0.5, TERMINALTEXTGOLD);
         DrawTextEx(consolasFont, "Check if Rover is Turned ON", Vector2{ 45, (float)screenHeight - 340 }, 50, 0.5, TERMINALTEXTGOLD);
-        DrawTextEx(consolasFont, "<Retry>", Vector2{ 45, (float)screenHeight - 190 }, 50, 0.5, CheckCollisionPointRec(GetMousePosition(), Rectangle{ 45, (float)screenHeight - 190, 200, 50 }) ? TERMINALOUTLINEYELLOW : TERMINALTEXTGOLD);
-        DrawTextEx(consolasFont, "<Exit>", Vector2{ 45, (float)screenHeight - 140 }, 50, 0.5, CheckCollisionPointRec(GetMousePosition(), Rectangle{ 45, (float)screenHeight - 140, 170, 50 }) ? TERMINALOUTLINEYELLOW : TERMINALTEXTGOLD);
+        DrawTextEx(consolasFont, "<Retry>", Vector2{ 45, (float)screenHeight - 140 }, 50, 0.5, CheckCollisionPointRec(GetMousePosition(), Rectangle{ 45, (float)screenHeight - 140, 200, 50 }) ? TERMINALOUTLINEYELLOW : TERMINALTEXTGOLD);
+        DrawTextEx(consolasFont, "<Exit>", Vector2{ 45, (float)screenHeight - 90 }, 50, 0.5, CheckCollisionPointRec(GetMousePosition(), Rectangle{ 45, (float)screenHeight - 90, 170, 50 }) ? TERMINALOUTLINEYELLOW : TERMINALTEXTGOLD);
 
-        drawBlinkingCursor(200, (float)screenHeight - 140);
+        drawBlinkingCursor(200, (float)screenHeight - 90);
 
         drawConsoleOverlay();
         EndDrawing();

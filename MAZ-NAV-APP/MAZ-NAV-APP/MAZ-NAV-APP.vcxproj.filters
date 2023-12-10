@@ -47,6 +47,21 @@
     <ClInclude Include="src\exitScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\sensorsMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\predefinedMazesMenu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\placeRover.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\navigatingScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\completeScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\ap_logo.png">

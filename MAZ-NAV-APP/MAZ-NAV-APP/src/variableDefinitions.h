@@ -5,18 +5,23 @@ enum LAYERS
     CONNECTION_ISSUE,
     CONNECTED_SCREEN,
     OPTIONS_MENU,
+    PREDEFINED_MAZES,
+    PLACE_ROVER,
+    NAVIGATING_SCREEN,
+    COMPLETE_SCREEN,
+    SENSORS_MENU,
     SETTINGS,
     EXIT
 };
 
-int screenWidth = 1920;
-int screenHeight = 1080;
+int screenWidth = 1600;
+int screenHeight = 900;
 
-const int constScreenWidth = 1920;
-const int constScreenHeight = 1080;
+const int constScreenWidth = 1600;
+const int constScreenHeight = 900;
 
 unsigned int FPS = 120;
-unsigned int layer = LOADING_SCREEN;
+unsigned int layer = OPTIONS_MENU;  // LOADING_SCREEN
 unsigned int previousLayer = 0;
 unsigned int currentLevel = 0;
 unsigned int cursorBlinkCounter = 0;
@@ -40,7 +45,7 @@ unsigned int dotLimit = 0;
 bool shouldDrawFPS = false;
 bool shouldExit = false;
 bool shouldDrawMap = true;
-bool shouldDrawCRTEffect = false;  // TODO
+bool shouldDrawCRTEffect = true;  // TODO
 bool shouldDisplayHelp = false;
 
 Texture2D apertureLogo;
@@ -67,4 +72,4 @@ Music creditsMusic, CRTBuzzMusic;
 
 Sound splitFlapSound, buttonPressSound, CRTOnOffSound;
 
-device mazNavRover;
+BTSerialPortBinding *mazNavRover;

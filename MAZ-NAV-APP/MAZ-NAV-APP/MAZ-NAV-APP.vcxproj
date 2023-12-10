@@ -150,6 +150,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\completeScreen.h" />
     <ClInclude Include="src\connectedScreen.h" />
     <ClInclude Include="src\connectingScreen.h" />
     <ClInclude Include="src\connectionIssue.h" />
@@ -157,7 +158,11 @@
     <ClInclude Include="src\flavortext.h" />
     <ClInclude Include="src\functions.h" />
     <ClInclude Include="src\loadingScreen.h" />
+    <ClInclude Include="src\navigatingScreen.h" />
     <ClInclude Include="src\options.h" />
+    <ClInclude Include="src\placeRover.h" />
+    <ClInclude Include="src\predefinedMazesMenu.h" />
+    <ClInclude Include="src\sensorsMenu.h" />
     <ClInclude Include="src\variableDefinitions.h" />
   </ItemGroup>
   <ItemGroup>

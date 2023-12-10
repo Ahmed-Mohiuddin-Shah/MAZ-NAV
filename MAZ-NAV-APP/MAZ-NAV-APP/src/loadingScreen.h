@@ -34,6 +34,7 @@ void initializaingStuff() {
 inline void loadingScreen()
 {   
     using namespace std::chrono_literals;
+    dotLimit = 0;
     std::future<void> f = std::async(std::launch::async, initializaingStuff);
     std::string loadingText = getRandomString(true);
     while (f.wait_for(1us) != std::future_status::ready)
@@ -60,5 +61,5 @@ inline void loadingScreen()
         drawConsoleOverlay();
         EndDrawing();
     }
-    layer = CONNECTING_SCREEN;
+    layer = CONNECTING_SCREEN;   // CONNECTING_SCREEN
 }

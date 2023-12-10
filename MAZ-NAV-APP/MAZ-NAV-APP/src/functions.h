@@ -39,7 +39,7 @@ void drawConsoleOverlay()
 
     if (shouldDrawCRTEffect)
     {
-        UpdateMusicStream(CRTBuzzMusic);
+        // UpdateMusicStream(CRTBuzzMusic);
         if (crtEffectRectangleHeight > screenHeight)
         {
             crtEffectRectangleHeight = -screenHeight;
