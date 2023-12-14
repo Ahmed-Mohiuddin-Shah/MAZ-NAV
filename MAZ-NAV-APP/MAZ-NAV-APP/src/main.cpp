@@ -8,6 +8,8 @@
 #include <memory>
 #include <cstdlib>
 
+#include <opencv2/opencv.hpp>
+
 #include <DeviceINQ.h>
 #include <BTSerialPortBinding.h>
 #include <BluetoothException.h>
@@ -15,6 +17,7 @@
 #include "flavortext.h"
 #include "variabledefinitions.h"
 #include "functions.h"
+#include "settingsMenu.h"
 #include "loadingScreen.h"
 #include "connectingScreen.h"
 #include "connectionIssue.h"
@@ -27,11 +30,17 @@
 #include "completeScreen.h"
 #include "exitScreen.h"
 
+#include "mazeTest.h"
+
 int main(void)
 {
+
 	initStuff();
 	loadingScreen();
-	
+
+	mazeTest();
+	return 0;
+
 	while (!shouldExit && !WindowShouldClose())
 	{
 		switch (layer)
@@ -64,6 +73,7 @@ int main(void)
 			completeScreen();
 			break;
 		case SENSORS_MENU:
+			sensorsMenu();
 			break;
 		case SETTINGS:
 			settingsMenu();
@@ -77,6 +87,7 @@ int main(void)
 
 
 	// TODO MUltithreaded unload
+	mazNavRover->Close();
 	UnloadShader(scanlineShader);
 	UnloadMusicStream(CRTBuzzMusic);
 	UnloadSound(splitFlapSound);

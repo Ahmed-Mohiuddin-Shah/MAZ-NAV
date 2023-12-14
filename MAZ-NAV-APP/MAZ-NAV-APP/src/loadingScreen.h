@@ -5,7 +5,7 @@
 inline void initStuff() {
     InitWindow(screenWidth, screenHeight, titleText);
     InitAudioDevice();
-    // ToggleFullscreen(); Enable Afterwards
+    // ToggleFullscreen(); // Enable Afterwards
     SetRandomSeed((unsigned int)time(NULL));
     apertureLogo = LoadTexture("resources/ap_logo.png");
     apertureScienceLogoRectangle = Rectangle{ 0.0f, 0.0f, (float)apertureLogo.width, (float)apertureLogo.height };

@@ -73,3 +73,6 @@ Music creditsMusic, CRTBuzzMusic;
 Sound splitFlapSound, buttonPressSound, CRTOnOffSound;
 
 BTSerialPortBinding *mazNavRover;
+
+std::string solution;
+

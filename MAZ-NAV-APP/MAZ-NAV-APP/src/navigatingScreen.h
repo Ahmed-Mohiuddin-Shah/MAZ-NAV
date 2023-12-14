@@ -1,14 +1,39 @@
 #pragma once
 
-std::string roverResponse() {
+void sendSolution(std::string solution) {
 
-    return "MOVE DONE";
+    solution = std::string("move move left move move");
+    try
+    {
+        mazNavRover->Write(solution.c_str(), solution.length());
+    }
+    catch (BluetoothException e)
+    {
+    }
+    
+
+}
+
+std::string roverResponse() {
+    char c[12];
+    try
+    {
+        mazNavRover->Read(c, 12);
+    }
+    catch (BluetoothException e)
+    {
+    }
+    std::string s(c);
+    return s;
 }
 
 void navigatingScreen() {
+    using namespace std::chrono_literals;
     dotLimit = 0;
     std::string dots;
-    while (!(GetKeyPressed() == KEY_A))
+    std::future<void> sendFuture = std::async(std::launch::async, sendSolution, solution);
+    std::future<std::string> receiveFuture = std::async(std::launch::async, roverResponse);
+    while (receiveFuture.wait_for(1us) != std::future_status::ready)
     {
 
         dotLimit++;
