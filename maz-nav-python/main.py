@@ -1,5 +1,6 @@
 from model import Model
 from gui import GUI
+from roverapi import RoverAPI
 
 
 def main():

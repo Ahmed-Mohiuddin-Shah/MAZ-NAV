@@ -18,6 +18,8 @@ class RoverController:
             print(f"Searching for bluetooth devices. Tries left {tries}")
             devices = bluetooth.discover_devices(lookup_names=True)
 
+            print(devices)
+
             for addr, name in devices:
                 if name == RoverController.DEVICE_NAME:
                     print("Found %s - connecting" % RoverController.DEVICE_NAME)
