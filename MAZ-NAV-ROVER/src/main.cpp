@@ -44,6 +44,7 @@ void setup()
   mpuGyroModule.begin();
   mpuGyroModule.calcGyroOffsets(true);
   SerialBT.begin("MAZ-NAV"); // Bluetooth device name
+
   // Configure each stepper
   stepper1.setMaxSpeed(MOTOR_MAX_SPEED);
   stepper1.setAcceleration(MOTOR_ACCELERATION);
@@ -156,6 +157,8 @@ void loop()
       }
       else if (move.compare("move") == 0)
       {
+
+        Serial.println("move");
         stepper1.setCurrentPosition(0);
         stepper2.setCurrentPosition(0);
         steppers.moveTo(positions);

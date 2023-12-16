@@ -18,7 +18,7 @@ unsigned int STEPS_FOR_90 = 1400;
 #define SERVOPWM 13
 
 #define MOTOR_MAX_SPEED 1500
-#define MOTOR_ACCELERATION 1000
+#define MOTOR_ACCELERATION 400
 
 enum initOptions
 {
