@@ -25,9 +25,11 @@ class MazeSolver:
 
         self.annotator: Optional[MazeAnnotator] = None
 
-    def solveWithDFS(self, animate: bool = False) -> List[tuple]:
+    def solveWithDFS(self, animate: bool = False) -> List[Tuple[int, int]]:
         if animate and not self.annotator:
             raise AnnotatorNotFound("Please setup annotator first")
+
+        markedImage = np.array(self.originalImage)
 
         if animate and self.annotator:
             markedImage = self.annotator.plotPointsOnImage(self.originalImage)
@@ -64,7 +66,7 @@ class MazeSolver:
                 current_node = parent[current_node]
                 current_path.insert(0, current_node)
 
-            if animate:
+            if animate and self.annotator:
                 plotted_image = self.annotator.plotPathOnImage(
                     markedImage, current_path[:-1], animate=False
                 )
@@ -78,7 +80,7 @@ class MazeSolver:
             path.insert(0, end_node)
         print("Path:", path)
 
-        if animate:
+        if animate and self.annotator:
             plotted_image = self.annotator.plotPathOnImage(
                 markedImage, path[:-1], animate=False
             )
@@ -86,10 +88,11 @@ class MazeSolver:
 
         return path
 
-    def solveWithBFS(self, animate: bool = False) -> List[tuple]:
+    def solveWithBFS(self, animate: bool = False) -> List[Tuple[int, int]]:
         if animate and not self.annotator:
             raise AnnotatorNotFound("Please setup annotator first")
 
+        markedImage = np.array(self.originalImage)
         if animate and self.annotator:
             markedImage = self.annotator.plotPointsOnImage(self.originalImage)
             markedImage = cv2.cvtColor(markedImage, cv2.COLOR_BGR2RGB)
@@ -127,7 +130,7 @@ class MazeSolver:
                 current_node = parent[current_node]
                 current_path.insert(0, current_node)
 
-            if animate:
+            if animate and self.annotator:
                 plotted_image = self.annotator.plotPathOnImage(
                     markedImage, current_path[:-1], animate=False
                 )
@@ -142,7 +145,7 @@ class MazeSolver:
             path.insert(0, end_node)
         print("Path:", path)
 
-        if animate:
+        if animate and self.annotator:
             plotted_image = self.annotator.plotPathOnImage(
                 markedImage, path[:-1], animate=False
             )
@@ -154,6 +157,7 @@ class MazeSolver:
         if animate and not self.annotator:
             raise AnnotatorNotFound("Please setup annotator first")
 
+        markedImage = np.array(self.originalImage)
         if animate and self.annotator:
             markedImage = self.annotator.plotPointsOnImage(self.originalImage)
             markedImage = cv2.cvtColor(markedImage, cv2.COLOR_BGR2RGB)
@@ -193,7 +197,7 @@ class MazeSolver:
                 current_node = parent[current_node]
                 current_path.insert(0, current_node)
 
-            if animate:
+            if animate and self.annotator:
                 plotted_image = self.annotator.plotPathOnImage(
                     markedImage, current_path[:-1], animate=False
                 )
@@ -216,7 +220,9 @@ class MazeSolver:
 
         return path
 
-    def solveWithAlgorithm(self, algorithm: str, animate: bool = False) -> List[tuple]:
+    def solveWithAlgorithm(
+        self, algorithm: str, animate: bool = False
+    ) -> List[Tuple[int, int]]:
         if algorithm == "DFS":
             return self.solveWithDFS(animate)
 

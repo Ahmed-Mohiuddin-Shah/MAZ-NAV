@@ -1,5 +1,5 @@
 import time
-from typing import Any, List, Dict, Set, Tuple
+from typing import List, Dict, Set, Tuple
 
 import cv2
 import numpy as np
@@ -75,7 +75,7 @@ class MazeAnnotator:
         return image
 
     def plotPathOnImage(
-        self, image: Any, path: List[Tuple[int, int]], animate: bool = False
+        self, image: np.ndarray, path: List[Tuple[int, int]], animate: bool = False
     ) -> np.ndarray:
         image = image.copy()
         midX = self.CELL_SIZE // 2
