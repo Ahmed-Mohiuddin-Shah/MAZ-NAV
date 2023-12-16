@@ -69,6 +69,7 @@ class GUI(Tk):
         self.roverThread = threading.Thread(
             target=lambda: self.queue.put(self.model.connectToRover())  # type: ignore
         )
+        self.roverThread.daemon = True
         self.roverThread.start()
 
         self.after(50, self.updateLoadingBar)
@@ -333,6 +334,7 @@ class GUI(Tk):
             self.waitForRoverToCompleteThread = threading.Thread(
                 target=self.model.runRoverToDestination(mazeImagePath, algorithm)  # type: ignore
             )
+            self.waitForRoverToCompleteThread.daemon = True
             self.waitForRoverToCompleteThread.start()
 
         if self.waitForRoverToCompleteThread.is_alive():  # type: ignore
