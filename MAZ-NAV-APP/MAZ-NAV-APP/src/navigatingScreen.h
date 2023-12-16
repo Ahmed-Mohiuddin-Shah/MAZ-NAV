@@ -2,7 +2,7 @@
 
 void sendSolution(std::string solution) {
 
-    solution = std::string("move move left move move");
+    solution = std::string("move move right move left move right move move move left move");
     try
     {
         mazNavRover->Write(solution.c_str(), solution.length());

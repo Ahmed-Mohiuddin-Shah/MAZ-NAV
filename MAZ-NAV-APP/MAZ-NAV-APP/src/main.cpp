@@ -38,9 +38,6 @@ int main(void)
 	initStuff();
 	loadingScreen();
 
-	mazeTest();
-	return 0;
-
 	while (!shouldExit && !WindowShouldClose())
 	{
 		switch (layer)
