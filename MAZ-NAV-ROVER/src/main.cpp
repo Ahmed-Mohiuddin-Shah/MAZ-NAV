@@ -33,7 +33,7 @@ AccelStepper stepper1(AccelStepper::DRIVER, STEP, MOTOR_DIR_1);
 AccelStepper stepper2(AccelStepper::DRIVER, STEP1, MOTOR_DIR_2);
 MultiStepper steppers;
 
-long positions[2] = {3200, 3200}; // Array of desired stepper positions
+long positions[2] = {3350, 3350}; // Array of desired stepper positions
 
 BluetoothSerial SerialBT;
 
@@ -106,6 +106,13 @@ void loop()
               stepper1.setMaxSpeed(s.toInt());
               stepper2.setMaxSpeed(s.toInt());
               break;
+            case POSITIONS:
+              positions[0] = s.toInt();
+              positions[1] = s.toInt();
+              break;
+            case STEPS_PER_90:
+              STEPS_FOR_90 = s.toInt();
+              break;
             default:
               break;
             }
@@ -119,6 +126,14 @@ void loop()
             else if (move == "-mSpeed")
             {
               option = MAX_SPEED;
+            }
+            else if (move == "-pos")
+            {
+              option = POSITIONS;
+            }
+            else if (move == "-s90")
+            {
+              option = STEPS_PER_90;
             }
           }
         }
