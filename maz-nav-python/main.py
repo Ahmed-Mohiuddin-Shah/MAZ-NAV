@@ -1,11 +1,13 @@
 import bluetooth
 import random
+from fastapi import FastAPI
 
 import cv2
 from maze_annotator import MazeAnnotator
 from maze_solver import MazeSolver
 
 from gui import GUI
+from roverapi import RoverAPI
 
 
 def main():

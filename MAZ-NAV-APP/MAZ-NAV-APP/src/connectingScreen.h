@@ -1,20 +1,30 @@
 #pragma once
 
-void connectDevice() {
+bool connectDevice() {
 	std::unique_ptr<DeviceINQ> inq(DeviceINQ::Create());
 	std::vector<device> devices = inq->Inquire();
 
-    for (const auto& d : devices)
+    for (const auto d : devices)
     {
         if (d.name == "MAZ-NAV") {
-            mazNavRover = d;
+            try
+            {
+                mazNavRover = BTSerialPortBinding::Create(d.address, 1);
+                mazNavRover->Connect();
+                return true;
+            }
+            catch (BluetoothException e)
+            {
+                return false;
+            }
         }
     }
+    return false;
 }
 
 void connectingScreen() {
     using namespace std::chrono_literals;
-    std::future<void> f = std::async(std::launch::async, connectDevice);
+    std::future<bool> f = std::async(std::launch::async, connectDevice);
     dotLimit = 0;
     std::string loadingDots = "";
     while (f.wait_for(1us) != std::future_status::ready)
@@ -46,7 +56,10 @@ void connectingScreen() {
         EndDrawing();
     }
 
-    if (mazNavRover.name.compare("MAZ-NAV") == 0)
+    f.wait();
+    bool isSuccess = f.get();
+
+    if (isSuccess)
     {
         layer = CONNECTED_SCREEN;
     }
