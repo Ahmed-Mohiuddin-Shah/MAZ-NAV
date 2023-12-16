@@ -1,24 +1,25 @@
+import queue
 import threading
-import time
-from tkinter import *
+from tkinter import Tk, N, W, E, S, HORIZONTAL, LEFT, CENTER, StringVar
 from tkinter import ttk
 from tkinter import messagebox
+from typing import Optional, Type
 from PIL import Image, ImageTk
 
 from model import Model
 
 
 class GUI(Tk):
-    def __init__(self, model: Model = None) -> None:
+    def __init__(self, model: Optional[Model]) -> None:
         super().__init__()
-        self.waitForRoverToCompleteThread = None
+        self.waitForRoverToCompleteThread = Optional[Type[threading.Thread]]
         self.model = model
 
-        self.startSplashScreen()
+        self.startConnectionScreen()
 
-        # TODO: Create a screen for unable to connect to the rover
+    def startConnectionScreen(self) -> None:
+        self.queue: queue.Queue[bool] = queue.Queue()
 
-    def startSplashScreen(self) -> None:
         self._truncateScreen()
 
         self.title("Maze Solver")
@@ -26,8 +27,12 @@ class GUI(Tk):
         self.minsize(800, 600)
 
         self.mainFrame = ttk.Frame(
-            self, padding="8 8 8 8", width=self.winfo_width(), height=self.winfo_height())
-        self.mainFrame.grid(column=0, row=0, sticky=(N, W, E, S))
+            self,
+            padding="8 8 8 8",
+            width=self.winfo_width(),
+            height=self.winfo_height(),
+        )
+        self.mainFrame.grid(column=0, row=0, sticky=f"{N}{W}{E}{S}")
 
         title = ttk.Label(
             self,
@@ -59,10 +64,10 @@ class GUI(Tk):
             length=200,
             mode="indeterminate",
         )
-        self.loadingBar.place(relx=0.5, rely=0.60, anchor=CENTER)
+        self.loadingBar.place(relx=0.5, rely=0.65, anchor=CENTER)
 
         self.roverThread = threading.Thread(
-            target=self.model.connectToRover
+            target=lambda: self.queue.put(self.model.connectToRover())  # type: ignore
         )
         self.roverThread.start()
 
@@ -72,6 +77,21 @@ class GUI(Tk):
         if self.roverThread.is_alive():
             self.loadingBar.step(5)
             self.after(50, self.updateLoadingBar)
+            return
+
+        isConnected = self.queue.get()
+        if not isConnected:
+            self.loadingBar.stop()
+            self.loadingBar.destroy()
+
+            self.loadingText.config(text="Unable to connect to the rover!")
+
+            retryButton = ttk.Button(
+                self,
+                text="Retry",
+                command=self.startConnectionScreen,
+            )
+            retryButton.place(relx=0.5, rely=0.70, anchor=CENTER)
             return
 
         self.loadingBar.stop()
@@ -89,7 +109,11 @@ class GUI(Tk):
         self._truncateScreen()
 
         mainFrame = ttk.Frame(
-            self, padding="8 8 8 8", width=self.winfo_width(), height=self.winfo_height())
+            self,
+            padding="8 8 8 8",
+            width=self.winfo_width(),
+            height=self.winfo_height(),
+        )
         mainFrame.pack(expand=True)
 
         title = ttk.Label(
@@ -101,16 +125,15 @@ class GUI(Tk):
 
         imagePaths = [
             "./mazes/maze00.jpg",
-            "./mazes/maze01.jpg",
+            "./mazes/maze05.jpeg",
             "./mazes/maze02.jpg",
         ]
 
         images = []
         for path in imagePaths:
-            image = Image.open(path)
-            image = image.resize((200, 200))
-            image = ImageTk.PhotoImage(image)
-            images.append(image)
+            image = Image.open(path).resize((200, 200))
+            imageTkinter = ImageTk.PhotoImage(image)
+            images.append(imageTkinter)
 
         buttonsFrame = ttk.Frame(mainFrame)
         buttonsFrame.pack(expand=True)
@@ -119,28 +142,25 @@ class GUI(Tk):
         button = ttk.Button(
             buttonsFrame,
             image=images[0],
-            command=lambda: self.startChooseAlgorithmScreen(
-                imagePaths[0]),
+            command=lambda: self.startChooseAlgorithmScreen(imagePaths[0]),
         )
-        button.image = images[0]
+        button.image = images[0]  # type: ignore
         imageButtons.append(button)
 
         button = ttk.Button(
             buttonsFrame,
             image=images[1],
-            command=lambda: self.startChooseAlgorithmScreen(
-                imagePaths[1]),
+            command=lambda: self.startChooseAlgorithmScreen(imagePaths[1]),
         )
-        button.image = images[1]
+        button.image = images[1]  # type: ignore
         imageButtons.append(button)
 
         button = ttk.Button(
             buttonsFrame,
             image=images[2],
-            command=lambda: self.startChooseAlgorithmScreen(
-                imagePaths[2]),
+            command=lambda: self.startChooseAlgorithmScreen(imagePaths[2]),
         )
-        button.image = images[2]
+        button.image = images[2]  # type: ignore
         imageButtons.append(button)
 
         for button in imageButtons:
@@ -152,7 +172,11 @@ class GUI(Tk):
         print(mazeImagePath)
 
         mainFrame = ttk.Frame(
-            self, padding="8 8 8 8", width=self.winfo_width(), height=self.winfo_height())
+            self,
+            padding="8 8 8 8",
+            width=self.winfo_width(),
+            height=self.winfo_height(),
+        )
         mainFrame.pack(expand=True)
 
         title = ttk.Label(
@@ -162,24 +186,19 @@ class GUI(Tk):
         )
         title.pack(expand=True, pady=20)
 
-        algorithms = [
-            "DFS",
-            "BFS",
-            "A*",
-            "Dijkstra"
-        ]
+        algorithms = ["DFS", "BFS", "Dijkstra"]
 
         algorithmsRadioButtonsFrame = ttk.Frame(mainFrame)
         algorithmsRadioButtonsFrame.pack(expand=True)
 
         style = ttk.Style()
         style.configure(
-            'Accent.TButton',
-            font=('Helvetica', 14, 'normal'),
+            "Accent.TButton",
+            font=("Helvetica", 14, "normal"),
         )
         style.configure(
-            'Accent.TRadiobutton',
-            font=('Helvetica', 14, 'normal'),
+            "Accent.TRadiobutton",
+            font=("Helvetica", 14, "normal"),
         )
 
         self.algorithm = StringVar()
@@ -212,9 +231,7 @@ class GUI(Tk):
         visualizeButton = ttk.Button(
             otherButtonsFrame,
             text="Visualize",
-            command=lambda: self.visualize(
-                mazeImagePath, self.algorithm.get()
-            ),
+            command=lambda: self.visualize(mazeImagePath, self.algorithm.get()),
         )
         visualizeButton.config(style="Accent.TButton")
         visualizeButton.pack(side=LEFT, expand=True, pady=10)
@@ -222,19 +239,17 @@ class GUI(Tk):
         startRace = ttk.Button(
             otherButtonsFrame,
             text="Start Race",
-            command=lambda: self.setupRaceScreen(
-                mazeImagePath, self.algorithm.get()
-            ),
+            command=lambda: self.setupRaceScreen(mazeImagePath, self.algorithm.get()),
         )
         startRace.config(style="Accent.TButton")
         startRace.pack(side=LEFT, expand=True, pady=10)
 
-    def visualize(self, mazeImagePath: int, algorithm: str) -> None:
+    def visualize(self, mazeImagePath: str, algorithm: str) -> None:
         if len(algorithm) == 0:
             messagebox.showerror("Please select an algorithm!")
             return
 
-        self.model.visualize(mazeImagePath, algorithm)
+        self.model.visualize(mazeImagePath, algorithm)  # type: ignore
 
     def setupRaceScreen(self, mazeImagePath: str, algorithm: str) -> None:
         if len(algorithm) == 0:
@@ -244,7 +259,11 @@ class GUI(Tk):
         self._truncateScreen()
 
         mainFrame = ttk.Frame(
-            self, padding="8 8 8 8", width=self.winfo_width(), height=self.winfo_height())
+            self,
+            padding="8 8 8 8",
+            width=self.winfo_width(),
+            height=self.winfo_height(),
+        )
         mainFrame.pack(expand=True)
 
         title = ttk.Label(
@@ -259,8 +278,8 @@ class GUI(Tk):
 
         style = ttk.Style()
         style.configure(
-            'Accent.TButton',
-            font=('Helvetica', 14, 'normal'),
+            "Accent.TButton",
+            font=("Helvetica", 14, "normal"),
         )
 
         backButton = ttk.Button(
@@ -275,8 +294,7 @@ class GUI(Tk):
             buttonsFrame,
             text="Start",
             style="Accent.TButton",
-            command=lambda: self.setupWaitForCompletionScreen(
-                mazeImagePath, algorithm),
+            command=lambda: self.setupWaitForCompletionScreen(mazeImagePath, algorithm),
         )
         readyButton.pack(side=LEFT, expand=True, padx=10)
 
@@ -284,7 +302,11 @@ class GUI(Tk):
         self._truncateScreen()
 
         mainFrame = ttk.Frame(
-            self, padding="8 8 8 8", width=self.winfo_width(), height=self.winfo_height())
+            self,
+            padding="8 8 8 8",
+            width=self.winfo_width(),
+            height=self.winfo_height(),
+        )
         mainFrame.pack(expand=True)
 
         title = ttk.Label(
@@ -292,7 +314,7 @@ class GUI(Tk):
             text="Waiting for rover to complete the maze...",
             font=("Helvetica", "32", "normal"),
             justify=CENTER,
-            wraplength=500
+            wraplength=500,
         )
         title.pack(expand=True, pady=20)
 
@@ -309,18 +331,12 @@ class GUI(Tk):
 
         if self.waitForRoverToCompleteThread is None:
             self.waitForRoverToCompleteThread = threading.Thread(
-                target=self.model.runRoverToDestination(
-                    mazeImagePath,
-                    algorithm
-                )
+                target=self.model.runRoverToDestination(mazeImagePath, algorithm)  # type: ignore
             )
             self.waitForRoverToCompleteThread.start()
 
-        if self.waitForRoverToCompleteThread.is_alive():
-            self.after(
-                100, self.setupWaitForCompletionScreen,
-                mazeImagePath, algorithm
-            )
+        if self.waitForRoverToCompleteThread.is_alive():  # type: ignore
+            self.after(100, self.setupWaitForCompletionScreen, mazeImagePath, algorithm)
         else:
             self.waitForRoverToCompleteThread = None
             self.setupCompletedScreen()
@@ -329,7 +345,11 @@ class GUI(Tk):
         self._truncateScreen()
 
         mainFrame = ttk.Frame(
-            self, padding="8 8 8 8", width=self.winfo_width(), height=self.winfo_height())
+            self,
+            padding="8 8 8 8",
+            width=self.winfo_width(),
+            height=self.winfo_height(),
+        )
         mainFrame.pack(expand=True)
 
         title = ttk.Label(
@@ -337,14 +357,14 @@ class GUI(Tk):
             text="Rover completed the maze!",
             font=("Helvetica", "32", "normal"),
             justify=CENTER,
-            wraplength=600
+            wraplength=600,
         )
         title.pack(expand=True, pady=20)
 
         style = ttk.Style()
         style.configure(
-            'Accent.TButton',
-            font=('Helvetica', 14, 'normal'),
+            "Accent.TButton",
+            font=("Helvetica", 14, "normal"),
         )
 
         backButton = ttk.Button(

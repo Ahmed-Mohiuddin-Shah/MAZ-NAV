@@ -1,8 +1,8 @@
-
 import time
-from typing import List, Dict, Set
+from typing import Any, List, Dict, Set, Tuple
 
 import cv2
+import numpy as np
 
 
 class MazeAnnotator:
@@ -11,7 +11,9 @@ class MazeAnnotator:
     LINE_SIZE = 2
     POINT_RADIUS = 3
 
-    def __init__(self, graph: Dict[tuple, Set[tuple]], start: tuple, end: tuple, dims: tuple):
+    def __init__(
+        self, graph: Dict[tuple, Set[tuple]], start: tuple, end: tuple, dims: tuple
+    ):
         self.graph = graph
         self.start = start
         self.end = end
@@ -23,7 +25,7 @@ class MazeAnnotator:
         self._verticalCells = self.height // self.CELL_SIZE
         self._horizontalCells = self.width // self.CELL_SIZE
 
-    def plotPointsOnImage(self, image: cv2.Mat) -> cv2.Mat:
+    def plotPointsOnImage(self, image: np.ndarray) -> np.ndarray:
         image = image.copy()
 
         midX = self.CELL_SIZE // 2
@@ -35,8 +37,7 @@ class MazeAnnotator:
 
         for i in range(self._verticalCells):
             for j in range(self._horizontalCells):
-                center = (midX * (j + 1) + midX * j,
-                          midY * (i + 1) + midY * i)
+                center = (midX * (j + 1) + midX * j, midY * (i + 1) + midY * i)
                 tempColor = color
                 radius = self.POINT_RADIUS
                 if (j, i) == self.start:
@@ -47,12 +48,11 @@ class MazeAnnotator:
                     tempColor = endColor
                     radius *= 2
 
-                image = cv2.circle(
-                    image, center, radius, tempColor, -1)
+                image = cv2.circle(image, center, radius, tempColor, -1)
 
         return image
 
-    def plotEdgesOnImage(self, image: cv2.Mat) -> cv2.Mat:
+    def plotEdgesOnImage(self, image: np.ndarray) -> np.ndarray:
         image = image.copy()
         midX = self.CELL_SIZE // 2
         midY = self.CELL_SIZE // 2
@@ -64,18 +64,19 @@ class MazeAnnotator:
             startX = startX * self.CELL_SIZE + midX
             startY = startY * self.CELL_SIZE + midY
 
-            for adjacent in self.graph.get(node):
-
-                # print(node, "->", adjacent)
+            for adjacent in self.graph.get(node, []):
                 endX, endY = adjacent
                 endX = endX * self.CELL_SIZE + midX
                 endY = endY * self.CELL_SIZE + midY
                 image = cv2.line(
-                    image, (startX, startY), (endX, endY), color, self.LINE_SIZE)
+                    image, (startX, startY), (endX, endY), color, self.LINE_SIZE
+                )
 
         return image
 
-    def plotPathOnImage(self, image: cv2.Mat, path: List[tuple], animate: bool = False) -> cv2.Mat:
+    def plotPathOnImage(
+        self, image: Any, path: List[Tuple[int, int]], animate: bool = False
+    ) -> np.ndarray:
         image = image.copy()
         midX = self.CELL_SIZE // 2
         midY = self.CELL_SIZE // 2
@@ -92,7 +93,8 @@ class MazeAnnotator:
             endY = endY * self.CELL_SIZE + midY
 
             image = cv2.line(
-                image, (startX, startY), (endX, endY), color, self.LINE_SIZE)
+                image, (startX, startY), (endX, endY), color, self.LINE_SIZE
+            )
 
             if animate:
                 self.displayImage(image)
@@ -100,7 +102,7 @@ class MazeAnnotator:
 
         return image
 
-    def displayImage(self, image: cv2.Mat) -> None:
+    def displayImage(self, image: np.ndarray) -> None:
         imageCopy = cv2.resize(image.copy(), (500, 500))
-        cv2.imshow('Maze', imageCopy)
+        cv2.imshow("Maze", imageCopy)
         cv2.waitKey(5)
