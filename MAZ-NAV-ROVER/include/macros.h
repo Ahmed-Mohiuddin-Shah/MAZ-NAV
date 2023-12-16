@@ -2,7 +2,7 @@
 #define MOTOR_STEPS 3200
 #define RPM 30
 #define MICROSTEPS 1
-unsigned int STEPS_FOR_90 = 1450;
+unsigned int STEPS_FOR_90 = 1400;
 
 // Basic Pin Definitions for sensors and drivers
 #define STEP 14
@@ -17,7 +17,7 @@ unsigned int STEPS_FOR_90 = 1450;
 #define SDA 21
 #define SERVOPWM 13
 
-#define MOTOR_MAX_SPEED 10000
+#define MOTOR_MAX_SPEED 1500
 #define MOTOR_ACCELERATION 1000
 
 enum initOptions

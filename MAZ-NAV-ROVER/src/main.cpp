@@ -33,7 +33,7 @@ AccelStepper stepper1(AccelStepper::DRIVER, STEP, MOTOR_DIR_1);
 AccelStepper stepper2(AccelStepper::DRIVER, STEP1, MOTOR_DIR_2);
 MultiStepper steppers;
 
-long positions[2] = {3350, 3350}; // Array of desired stepper positions
+long positions[2] = {3250, 3250}; // Array of desired stepper positions
 
 BluetoothSerial SerialBT;
 
