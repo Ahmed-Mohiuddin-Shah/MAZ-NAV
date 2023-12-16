@@ -12,3 +12,4 @@
 #  Misc. #
 ##########
 /BOM/.vscode
+__pycache__
