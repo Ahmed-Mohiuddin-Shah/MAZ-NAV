@@ -1,6 +1,3 @@
-
-import time
-
 from maze_solver import MazeSolver
 from maze_annotator import MazeAnnotator
 from rover_controller import RoverController
@@ -11,8 +8,8 @@ class Model:
         self.mazeSolver = MazeSolver()
         self.roverController = RoverController()
 
-    def connectToRover(self):
-        self.roverController.connectToRover()
+    def connectToRover(self) -> bool:
+        return self.roverController.connectToRover()
 
     def disconnectFromRover(self):
         self.roverController.disconnectFromRover()
@@ -30,7 +27,7 @@ class Model:
             self.mazeSolver.graph,
             self.mazeSolver.start,
             self.mazeSolver.end,
-            self.mazeSolver.binaryImage.shape
+            self.mazeSolver.binaryImage.shape,
         )
         self.mazeSolver.setAnnotator(annotator)
         self.mazeSolver.solveWithAlgorithm(algorithm, animate=True)
